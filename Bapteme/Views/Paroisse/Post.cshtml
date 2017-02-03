@@ -1,0 +1,72 @@
+﻿@model Bapteme.Models.Paroisse
+@{
+	Layout = "_Layout";
+}
+
+<div class="row">
+	<div class="pull-left">
+		<h2>@Model.Name</h2>
+	</div>
+	<div class="pull-right">
+		@if (Model.Clochers.Count() > 0)
+		{
+			@Html.Partial("_dropdownClochers", Model.Clochers)
+		}
+	</div>
+
+</div>
+
+<div id="index_bapteme">
+	@if (ViewBag.Celebrations.Count > 0)
+	{
+		@Html.Partial("_indexCelebrations", (List<Celebration>)ViewBag.Celebrations)
+	}
+</div>
+
+@if (ViewBag.roles.Contains(role.Manager) || User.IsInRole("Admin"))
+{
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<form class="form-inline" 
+				  asp-controller="ApiCelebration" 
+				  asp-action="post" 
+				  data-ajax="true"
+				  data-ajax-method="POST"
+				  data-ajax-mode="replace"
+				  data-ajax-update="#index_bapteme"
+				  data-ajax-success="SetModalAddBapteme">
+				@Html.Hidden("ParoisseId", Model.Id)
+				<div class="form-group">
+					<label class="control-label">Ajouter célébration :</label>
+				</div>
+				<div class="form-group">
+					<select class="form-control" name="ClocherId">
+						@foreach (Clocher clocher in Model.Clochers)
+						{
+							<option value="@clocher.Id">@clocher.Name</option>
+						}
+					</select>
+				</div>
+				<div class="form-group">
+					<div class='input-group date' id='datetimepicker'>
+						<input type='text' class="form-control" name="Date"/>
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-calendar"></span>
+						</span>
+					</div>
+				</div>
+				<button type="submit" class="btn btn-default">Ajouter</button>
+			</form>
+		</div>
+	</div>
+}
+
+<script type="text/javascript">
+	window.onload = function () {
+            $('#datetimepicker').datetimepicker({
+                sideBySide: true,
+				locale: 'fr'
+            });
+	};
+</script>
+

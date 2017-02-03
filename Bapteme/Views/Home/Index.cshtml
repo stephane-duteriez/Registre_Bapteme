@@ -1,0 +1,19 @@
+﻿@{
+    ViewData["Title"] = "Page non autorisée";
+}
+
+<div class="jumbotron">
+	<h1>Vous avez déjà un compte!</h1>
+	<p>...</p>
+	<p><a asp-controller="Account" asp-action="Login" class="btn btn-primary btn-lg" role="button">Connection</a></p>
+</div>
+
+<div class="jumbotron" hidden>
+	<h1>Demonstration!</h1>
+	<p>...</p>
+	<p><a class="btn btn-primary btn-lg" href="#" role="button">Demo</a></p>
+</div>
+
+<div>
+	@Html.Partial("~/Views/Paroisse/Index.cshtml")
+</div>

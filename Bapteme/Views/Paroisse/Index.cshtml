@@ -1,0 +1,18 @@
+﻿@model IEnumerable<Bapteme.Models.Paroisse>
+@{
+    Layout = "_Layout";
+}
+<h1>Liste des Paroisses :</h1>
+<div>
+@foreach (var paroisse in Model)
+{
+    <div class="row">
+        <div class="col-md-2"><p>@paroisse.Name</p></div>
+        <div class="col-md-2">@Html.ActionLink("View", "Post", "Paroisse", new { key=paroisse.Key}, new { @class = "btn btn-default"})</div>
+    </div>
+}
+</div>
+@if (this.User.IsInRole("Admin"))
+{
+	<a asp-area="" asp-controller="Paroisse" asp-action="Create" class="btn btn-default">Ajouter</a>
+}

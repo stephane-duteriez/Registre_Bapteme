@@ -1,0 +1,23 @@
+@model Bapteme.Models.Clocher
+@{
+    Layout = "_Layout";
+}
+<h1>Creation d'une clocher</h1>
+
+<fieldset>
+    @using (Html.BeginForm())
+    {
+        @Html.ValidationSummary()
+        <p>
+            @Html.LabelFor(x=>x.Name)
+            @Html.EditorFor(x=>x.Name)
+            @Html.ValidationMessageFor(x=>x.Name)
+        </p>
+		<p>
+			@Html.DropDownListFor(model => model.ParoisseId, new SelectList(     ViewBag.ParoissesName, "Value", "Text"))
+		</p>
+        <p>
+            <button type="submit">Creation Clocher</button>
+        </p>
+    }
+</fieldset>

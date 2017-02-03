@@ -1,0 +1,130 @@
+﻿@model List<Bapteme.Models.Celebration>
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h3 class="panel-title">Liste Celebrations</h3>
+	</div>
+		<div class="panel-group" id="list_celebrations">
+				@foreach (Celebration celebration in Model)
+				{
+					<div id="@("ID" + celebration.Id)" class="panel panel-default" data-celebrationid="@celebration.Id">
+						<div class="panel-body">
+							<div class="col-sm-3">
+								<div class="row">
+									<div class="col-sm-3">
+										<div class="date-number">
+											@celebration.Date.ToString("dd")
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<div class="date-string-day">@celebration.Date.ToString("dddd")</div>
+										<div class="date-month">@celebration.Date.ToString("MMMM, yyyy")</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-1">
+								<div>@celebration.Date.ToString("HH:mm")</div>
+							</div>
+							<div class="col-sm-2">@celebration.Clocher.Name</div>
+							<div class="col-sm-2">
+									@if (ViewBag.roles.Contains(role.Manager) || User.IsInRole("Admin"))
+									{
+										<button type="button" class="btn btn-default" 
+												data-toggle="collapse" data-parent="#list_celebrations" data-target="#@("list_baptemes" + celebration.Id)">
+											List Baptemes<span class="glyphicon glyphicon-arrow-down"></span>
+										</button>
+									}
+							</div>
+							<div class="col-sm-4">
+								@if (ViewBag.roles.Contains(role.Manager) || User.IsInRole("Admin"))
+										{
+										<button type="button" class="btn btn-primary" 
+												data-toggle="modal" 
+												data-target="#AddBapteme" 
+												data-celebrationid="@celebration.Id">
+											Ajouter Bapteme
+										</button>
+										<button onclick="delete_uParoisse('@celebration.Id')" class="btn btn-danger">
+											<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+										</button>
+									}
+									</div>
+						</div>
+					
+						<div class="list-baptemes collapse panel-collapse" id="@("list_baptemes" + celebration.Id)" data-celebrationid="@celebration.Id"></div>
+
+					
+
+					</div>
+				}
+		</div>
+</div>
+
+<div class="modal fade modal-AddBapteme" id="AddBapteme" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="AddBaptemeModalLabel">Ajouter un bapteme</h4>
+			</div>
+			<div class="modal-body">
+				@Html.Partial("~/Views/Bapteme/_addBapteme.cshtml", null, null)
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+				<input type="submit" class="btn btn-primary" form="AddBaptemeForm" />
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<script type="text/javascript">
+	function delete_uParoisse(CelebrationId) {
+		$.ajax({
+			url: "@Url.Action("Delete", "ApiCelebration")",
+			type: "DELETE",
+			data: { CelebrationId: CelebrationId, __RequestVerificationToken: $("input[name='__RequestVerificationToken']").val() },
+			success: function () {
+				$("#ID" + CelebrationId).remove();
+			}
+		});
+	}
+
+	function SetModalAddBapteme() {
+		$('#AddBapteme').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget);
+			var celebrationId = button.data('celebrationid');
+			var modal = $(this);
+			modal.find('#CelebrationId').val(celebrationId);
+		});
+		$('#dtPickerBirthDate').datetimepicker({
+			locale: 'fr',
+			format: 'DD/MM/YYYY'
+		});
+		$(".list-baptemes").on('show.bs.collapse', function () {
+			reloadBaptemes($(this).data('celebrationid'), false);
+		})
+	};
+
+	function reloadBaptemesAfterAdd()
+	{
+		$('#AddBapteme').modal('hide');
+		reloadBaptemes($("#CelebrationId").val(), true)
+	}
+
+	function reloadBaptemes(CelebrationId, force_reload) {
+		console.log($("#list_baptemes" + CelebrationId).html()=="");
+		if (force_reload || $("#list_baptemes" + CelebrationId).html() == "")
+		{
+			$.ajax({
+				url: "@Url.Action("GetBaptemeForCelebration", "ApiBapteme")",
+				type: "GET",
+				data: { CelebrationId: CelebrationId, __RequestVerificationToken: $("input[name='__RequestVerificationToken']").val() },
+				success: function (data)
+				{
+					console.log("finish");
+					$("#list_baptemes" + CelebrationId).html(data);
+				}
+			})
+		}
+	}
+</script>

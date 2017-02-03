@@ -1,0 +1,7 @@
+@model Bapteme.Models.Clocher
+@{
+    Layout ="_Layout";
+}
+<h2>@Model.Name</h2>
+<p>@Model.Paroisse.Name</p>
+@Html.ActionLink("Modifier", "Edit", "Clocher", new { keyParoisse = Model.Paroisse.Key, keyClocher = Model.Key } ,new { @class = "btn btn-default" })

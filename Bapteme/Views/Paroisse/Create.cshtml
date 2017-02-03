@@ -1,0 +1,21 @@
+@model Bapteme.Models.Paroisse
+@{
+    Layout = "_Layout";
+}
+<h1>Creation d'une paroisse</h1>
+
+<fieldset>
+    @using (Html.BeginForm())
+    {
+        @Html.ValidationSummary()
+        <p>
+            @Html.LabelFor(x=>x.Name)
+            @Html.EditorFor(x=>x.Name)
+            @Html.ValidationMessageFor(x=>x.Name)
+        </p>
+
+        <p>
+            <button type="submit">Creation paroisse</button>
+        </p>
+    }
+</fieldset>

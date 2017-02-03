@@ -1,0 +1,13 @@
+﻿@model List<Bapteme.Models.Clocher>
+<div class="dropdown navbar-btn">
+	<button class="btn btn-default dropdown-toggle" id="dropdownClochers" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+		Clochers
+		<span class="caret"/>
+	</button>
+	<ul class="dropdown-menu" aria-labelledby="dropdownClochers">
+	@foreach (Clocher clocher in Model)
+	{
+		<li>@Html.ActionLink(clocher.Name, "Post", "Clocher", new { keyParoisse = clocher.Paroisse.Key, keyClocher = clocher.Key })</li>
+	}
+	</ul>
+</div>

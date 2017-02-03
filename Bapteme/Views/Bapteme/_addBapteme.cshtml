@@ -1,0 +1,62 @@
+﻿@model Bapteme.Models.CustomViewModels.AddBaptemeViewModel
+<form asp-controller="ApiBapteme"
+	  asp-action="post"
+	  data-ajax="true"
+	  data-ajax-method="POST"
+	  data-ajax-success="reloadBaptemesAfterAdd"
+	  id="AddBaptemeForm">
+	<input type="hidden" name="CelebrationId" id="CelebrationId" value="test" />
+	<div class="form-group">
+		@Html.LabelFor(x => x.FirstName, new { @class = "control-label" })
+		@Html.TextBoxFor(x => x.FirstName, new { @class = "form-control" })
+	</div>
+	<div class="form-group">
+		@Html.LabelFor(x => x.LastName, new { @class = "control-label" })
+		@Html.TextBoxFor(x => x.LastName, new { @class = "form-control" })
+	</div>
+	<div class="form-group">
+		@Html.LabelFor(x=>x.BirthDate)
+		<div class='input-group date' id='dtPickerBirthDate'>
+			@Html.TextBoxFor(x=>x.BirthDate, new { @class = "form-control" })
+			<span class="input-group-addon">
+				<span class="glyphicon glyphicon-calendar"></span>
+			</span>
+		</div>
+	</div>
+	<div class="form-group">
+		<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#contactAdult" aria-expanded="false" aria-controls="contactAdult">
+			Ajouter email et mobile pour adult
+		</button>
+	</div>
+	<div class="collapse" id="contactAdult">
+		<div class="form-group">
+			@Html.LabelFor(x=>x.TelephoneMobile, new { @class= "control-label"})
+			@Html.TextBoxFor(x =>x.TelephoneMobile, new { @class = "form-control" })
+		</div>
+		<div class="form-group">
+			@Html.LabelFor(x=>x.Email, new { @class= "control-label"})
+			@Html.TextBoxFor(x =>x.Email, new { @class = "form-control" })
+		</div>
+	</div>
+	<div class="control-label">Adresse</div>
+	<div class="form-group">
+		@Html.LabelFor(x=>x.Numero, new { @class = "control-label" })
+		@Html.TextBoxFor(x=>x.Numero, new { @class="form-control"})
+	</div>
+	<div class="form-group">
+		@Html.LabelFor(x => x.Rue, new { @class = "control-label" })
+		@Html.TextBoxFor(x => x.Rue, new { @class = "form-control" })
+	</div>
+	<div class="form-group">
+		@Html.LabelFor(x => x.CP, new { @class = "control-label" })
+		@Html.TextBoxFor(x => x.CP, new { @class = "form-control" })
+	</div>
+	<div class="form-group">
+		@Html.LabelFor(x => x.Ville, new { @class = "control-label" })
+		@Html.TextBoxFor(x => x.Ville, new { @class = "form-control" })
+	</div>
+	<div class="form-group">
+		@Html.LabelFor(x => x.Complement, new { @class = "control-label" })
+		@Html.TextBoxFor(x => x.Complement, new { @class = "form-control" })
+	</div>
+</form>

@@ -1,0 +1,15 @@
+@model IEnumerable<Bapteme.Models.ApplicationUser>
+@{
+    Layout = "_Layout";
+}
+<h1>Index</h1>
+<div>
+@foreach (var user in Model)
+{
+    <div class="row">
+        <div class="col-md-2"><p>@user.Email</p></div>
+		<div class="col-md-2">@Html.ActionLink("Edit", "Edit", "Admin", new { UserId = user.Id }, new { @class = "btn btn-default" })</div>
+    </div>
+}
+</div>
+<a asp-area="" asp-controller="Clocher" asp-action="Create" class="btn btn-default">Ajouter</a>

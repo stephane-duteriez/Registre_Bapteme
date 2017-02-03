@@ -1,0 +1,39 @@
+﻿@model List<Bapteme.Models.UserParoisse>
+<div>
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>Paroisse</th>
+				<th>Role</th>
+			</tr>
+		</thead>
+		<tbody>
+				@foreach (UserParoisse uParoisse in Model)
+				{
+					<tr id="@("ID" + uParoisse.Id)">
+						<td>@uParoisse.Paroisse.Name</td>
+						<td>@uParoisse.Role</td>
+						<td><button onclick="delete_uParoisse('@uParoisse.Id')" class="btn btn-danger">
+								<span class="glyphicon glyphicon-remove" aria-hidden="true" ></span>
+							</button>
+						</td>
+					</tr>
+				}
+		</tbody>
+	</table>
+</div>
+
+
+<script>
+	function delete_uParoisse(uParoisseId)
+	{
+		$.ajax({
+			url: "@Url.Action("Delete", "ApiUserParoisse")",
+			type: "DELETE",
+			data: { uParoisseId: uParoisseId, __RequestVerificationToken:$( "input[name='__RequestVerificationToken']" ).val()  },
+			success: function () {
+				$("#ID"+uParoisseId).remove();
+			}
+		});
+	}
+</script>

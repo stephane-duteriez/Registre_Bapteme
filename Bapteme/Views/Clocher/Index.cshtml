@@ -1,0 +1,9 @@
+@model IEnumerable<Bapteme.Models.Clocher>
+@{
+    Layout = "_Layout";
+}
+<h1>Index</h1>
+<div>
+	@Html.Partial("_indexClochers", Model)
+</div>
+<a asp-area="" asp-controller="Clocher" asp-action="Create" class="btn btn-default">Ajouter</a>

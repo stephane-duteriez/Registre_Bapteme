@@ -1,0 +1,24 @@
+﻿@model List<Bapteme.Models.Clocher>
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h3 class="panel-title">Liste Cochers</h3>
+	</div>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Nom</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+					@foreach (Clocher clocher in Model)
+					{
+						<tr id="@("ID" + clocher.Id)">
+							<td>@clocher.Name</td>
+							<td>@clocher.Paroisse.Name</td>
+							<td>@Html.ActionLink("View", "Post", "Clocher", new { keyClocher = clocher.Key, keyParoisse = clocher.Paroisse.Key }, new { @class = "btn btn-default" })</td>
+						</tr>
+					}
+			</tbody>
+		</table>
+</div>

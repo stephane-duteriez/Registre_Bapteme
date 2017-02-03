@@ -1,0 +1,33 @@
+@model Bapteme.Models.AdminViewModels.EditUserViewModel
+@{
+    Layout ="_Layout";
+}
+<h2>@Model.user.Email</h2>
+<div id="list_uParoisses">
+	@if (Model.userParoises.Count > 0)
+	{
+	  @Html.Partial("_indexUserParoisse", Model.userParoises)
+	}
+</div>
+<form class="form-inline" 
+	  asp-controller="ApiUserParoisse" 
+	  asp-action="post" data-ajax="true" 
+	  data-ajax-method="POST" 
+	  data-ajax-mode="replace" 
+	  data-ajax-update="#list_uParoisses" 
+	  data-ajax-contenttype="">
+	@Html.Hidden("UserId", Model.user.Id)
+	<div class="form-group">
+		<select class="form-control" name="ParoisseId">
+			@foreach (Paroisse paroisse in ViewBag.Paroisses)
+			{
+				<option value="@paroisse.Id">@paroisse.Name</option>
+			}
+		</select>
+	</div>
+	<div class="form-group">
+		<select name="Role" asp-items="Html.GetEnumSelectList<role>()" class="form-control"></select>
+	</div>
+	<button type="submit" class="btn btn-default">Ajouter</button>
+</form>
+
