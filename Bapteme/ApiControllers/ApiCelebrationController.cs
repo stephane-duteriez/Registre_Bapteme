@@ -23,9 +23,9 @@ namespace Bapteme.ApiControllers
 		[Route("")]
 		[Authorize(Policy = "IsAdmin")]
 		[HttpGet]
-		public List<UserParoisse> GetAll()
+		public List<Celebration> GetAll()
 		{
-			return _db.UserParoisse.ToList();
+			return _db.Celebrations.ToList();
 		}
 
 		[Route("")]
@@ -40,7 +40,8 @@ namespace Bapteme.ApiControllers
 			//}
 			await _db.Celebrations.AddAsync(celebration);
 			await _db.SaveChangesAsync();
-			Clocher clocher = await _db.Clochers.Include("Paroisse").Where(x => x.Id == celebration.ClocherId).FirstAsync();
+			Clocher clocher = await _db.Clochers.Where(x => x.Id == celebration.ClocherId).FirstAsync();
+			ViewBag.roles = await FindRole(await GetCurrentUserAsync(), clocher.ParoisseId);
 			List<Celebration> l_celebration = await _db.Celebrations.Include("Clocher").Where(x => x.Clocher.ParoisseId == clocher.ParoisseId).Where(x=>x.Date >= DateTime.Now.AddDays(-7)).OrderBy(x=>x.Date).ToListAsync();
 			return PartialView("_indexCelebrations", l_celebration);
 		}

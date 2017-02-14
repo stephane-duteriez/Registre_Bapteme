@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace Bapteme.Models
 {
-    public class Clocher
-    {
+	public class Clocher : BaseEntity
+	{
 		[Key]
 		public Guid Id { get; set; }
 
@@ -34,9 +34,16 @@ namespace Bapteme.Models
 
 		public Guid ParoisseId { get; set; }
 
+		public Guid? AdresseId { get; set; }
+
 		[ForeignKey("ParoisseId")]
 		public Paroisse Paroisse { get; set; }
 
-		public List<Clocher> Clochers { get; set; }
+		[ForeignKey("AdresseId")]
+		public Adresse Adresse { get; set; }
+
+		public List<Permanence> Permanences { get; set; }
+
+		public List<Celebration> Celebrations { get; set; }
 	}
 }

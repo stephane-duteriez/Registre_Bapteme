@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Bapteme.Models
 {
-	public class Paroisse
+	public class Paroisse : BaseEntity
 	{
 		[Key]
 		public Guid Id { get; set; }

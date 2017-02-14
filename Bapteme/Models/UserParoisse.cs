@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Bapteme.Models
 {
 	public enum role { Viewer, Manager, Administrateur, Contact}
-	public class UserParoisse
+	public class UserParoisse : BaseEntity
 	{
 		[Key]
 		public Guid Id { get; set; }

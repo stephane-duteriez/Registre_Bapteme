@@ -89,7 +89,6 @@ namespace BaptemeTests
 			var mock = new Mock<IHttpContextAccessor>();
 			mock.Setup(p => p.HttpContext.User).Returns(new_claim);
 			controller.ControllerContext.HttpContext = mock.Object.HttpContext;
-
 			// Act
 			IActionResult result = await controller.Index() as IActionResult;
 

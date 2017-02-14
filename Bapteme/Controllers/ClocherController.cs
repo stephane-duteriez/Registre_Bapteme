@@ -63,10 +63,11 @@ namespace Bapteme.Controllers
 		public async Task<IActionResult> Edit(string keyParoisse, string keyClocher)
 		{
 			Clocher clocher = _db.Clochers.Include(c => c.Paroisse).FirstOrDefault(x => x.Key == keyClocher);
-			List<role> myRoles = await FindRole(await GetCurrentUserAsync(), clocher.Paroisse);
+			List<role> myRoles = await FindRole(await GetCurrentUserAsync(), clocher.ParoisseId);
 
 			if (myRoles.Contains(role.Administrateur))
 			{
+				ViewBag.Permanences = await _db.Permences.Where(c => c.ClocherId == clocher.Id).ToListAsync();
 				return View(clocher);
 			}
 

@@ -7,6 +7,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <UserSecretsId>aspnet-Bapteme-d5921d14-b2e0-4e03-b8b6-ddb3f3e1b632</UserSecretsId>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
@@ -32,5 +33,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="wwwroot\.well-known\" />
+    <Folder Include="wwwroot\images\" />
   </ItemGroup>
 </Project>

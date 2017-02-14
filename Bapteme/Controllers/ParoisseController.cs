@@ -65,7 +65,7 @@ namespace Bapteme.Controllers
         {
 			ApplicationUser user = await GetCurrentUserAsync();
             var paroisse = _db.Paroisses.Include("Clochers").FirstOrDefault(x=>x.Key==key);
-			ViewBag.roles = await FindRole(user, paroisse);
+			ViewBag.roles = await FindRole(user, paroisse.Id);
 			ViewBag.Celebrations = await _db.Celebrations.Where(x => x.Clocher.ParoisseId == paroisse.Id).Where(x=>x.Date >= DateTime.Now.AddDays(-7)).OrderBy(x=>x.Date).ToListAsync();
 			return View(paroisse);
         }

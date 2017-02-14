@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Bapteme.Models
 {
-	public class Adresse
+	public class Adresse : BaseEntity
 	{
 		[Key]
 		public Guid Id { get; set; }

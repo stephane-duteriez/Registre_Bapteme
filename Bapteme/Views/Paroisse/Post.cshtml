@@ -60,6 +60,14 @@
 		</div>
 	</div>
 }
+else
+{
+	@if (Model.Clochers.Count() > 0)
+	{
+		@Html.Partial("_indexClochers", Model.Clochers)
+	}
+
+}
 
 <script type="text/javascript">
 	window.onload = function () {

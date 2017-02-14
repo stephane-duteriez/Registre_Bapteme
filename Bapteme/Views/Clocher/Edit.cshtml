@@ -30,7 +30,41 @@
 			</div>
 		</div>
 	</div>
+	<div id="index_permanence">
+		@Html.Partial("_indexPermanence", (List<Permanence>)ViewBag.Permanences)
+	</div>
 </form>
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<form class="form-inline"
+				  asp-controller="ApiPermanences"
+				  asp-action="PostPermanence"
+				  data-ajax="true"
+				  data-ajax-methode="replace"
+				  data-ajax-update="#index_permanence">
+				@Html.Hidden("ClocherId", Model.Id)
+				<div class="form-group">
+					<label class="control-label">Ajouter permanence :</label>
+				</div>
+				<div class="form-group">
+					<select name="JourSemaine" asp-items="Html.GetEnumSelectList<JourSemaine>()" class="form-control"></select>
+				</div>
+				<div class="form-group">
+					<input type="text" class="form-control" name="DebutHours" />
+				</div>
+				<div class="form-group">
+					<input type="text" class="form-control" name="DebutMinutes" />
+				</div>
+				<div class="form-group">
+					<input type="text" class="form-control" name="FinHours" />
+				</div>
+				<div class="form-group">
+					<input type="text" class="form-control" name="FinMinutes" />
+				</div>
+				<button type="submit" class="btn btn-default">Ajouter</button>
+			</form>
+		</div>
+	</div>
 
 <div>
 	@if (User.IsInRole("Admin"))
