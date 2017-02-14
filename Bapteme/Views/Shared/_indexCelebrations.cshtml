@@ -8,52 +8,45 @@
 				{
 					<div id="@("ID" + celebration.Id)" class="panel panel-default" data-celebrationid="@celebration.Id">
 						<div class="panel-body">
-							<div class="col-sm-3">
+							<div class="col-md-2">
 								<div class="row">
-									<div class="col-sm-3">
+									<div class="col-md-3">
 										<div class="date-number">
 											@celebration.Date.ToString("dd")
 										</div>
 									</div>
-									<div class="col-sm-6">
+									<div class="col-md-6">
 										<div class="date-string-day">@celebration.Date.ToString("dddd")</div>
 										<div class="date-month">@celebration.Date.ToString("MMMM, yyyy")</div>
 									</div>
 								</div>
 							</div>
-							<div class="col-sm-1">
+							<div class="col-md-1">
 								<div>@celebration.Date.ToString("HH:mm")</div>
 							</div>
-							<div class="col-sm-2">@celebration.Clocher.Name</div>
-							<div class="col-sm-2">
-									@if (ViewBag.roles.Contains(role.Manager) || User.IsInRole("Admin"))
-									{
-										<button type="button" class="btn btn-default" 
-												data-toggle="collapse" data-parent="#list_celebrations" data-target="#@("list_baptemes" + celebration.Id)">
-											List Baptemes<span class="glyphicon glyphicon-arrow-down"></span>
-										</button>
-									}
-							</div>
-							<div class="col-sm-4">
-								@if (ViewBag.roles.Contains(role.Manager) || User.IsInRole("Admin"))
+							<div class="col-md-2">@celebration.Clocher.Name</div>
+							<div class="col-md-6">
+								<div class="btn-group" role="group">
+										@if (ViewBag.roles.Contains(role.Manager) || User.IsInRole("Admin"))
 										{
-										<button type="button" class="btn btn-primary" 
-												data-toggle="modal" 
-												data-target="#AddBapteme" 
-												data-celebrationid="@celebration.Id">
-											Ajouter Bapteme
-										</button>
-										<button onclick="delete_uParoisse('@celebration.Id')" class="btn btn-danger">
-											<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-										</button>
-									}
-									</div>
+											<button type="button" class="btn btn-default" 
+													data-toggle="collapse" data-parent="#list_celebrations" data-target="#@("list_baptemes" + celebration.Id)">
+												List Baptemes<span class="glyphicon glyphicon-arrow-down"></span>
+											</button>
+											<button type="button" class="btn btn-primary"
+													data-toggle="modal"
+													data-target="#AddBapteme"
+													data-celebrationid="@celebration.Id">
+												Ajouter Bapteme
+											</button>
+											<button onclick="delete_uParoisse('@celebration.Id')" class="btn btn-danger">
+												<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+											</button>
+										}
+								</div>
+							</div>
+							<div class="list-baptemes collapse panel-collapse" id="@("list_baptemes" + celebration.Id)" data-celebrationid="@celebration.Id"></div>
 						</div>
-					
-						<div class="list-baptemes collapse panel-collapse" id="@("list_baptemes" + celebration.Id)" data-celebrationid="@celebration.Id"></div>
-
-					
-
 					</div>
 				}
 		</div>
