@@ -48,3 +48,12 @@ textarea {
         display: none;
     }
 }
+
+.date-number {
+    font-size : 2em;
+}
+
+.date-month {
+    font-style : italic;
+    font-size : 0.8em;
+}
