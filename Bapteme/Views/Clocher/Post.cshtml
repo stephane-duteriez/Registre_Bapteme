@@ -4,4 +4,7 @@
 }
 <h2>@Model.Name</h2>
 <p>@Model.Paroisse.Name</p>
-@Html.ActionLink("Modifier", "Edit", "Clocher", new { keyParoisse = Model.Paroisse.Key, keyClocher = Model.Key } ,new { @class = "btn btn-default" })
+@if (ViewBag.roles.Contains(role.Manager) || User.IsInRole("Admin"))
+{
+	@Html.ActionLink("Modifier", "Edit", "Clocher", new { keyParoisse = Model.Paroisse.Key, keyClocher = Model.Key }, new { @class = "btn btn-default" })
+}
