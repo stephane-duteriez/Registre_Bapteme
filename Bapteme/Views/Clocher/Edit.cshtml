@@ -44,22 +44,48 @@
 				  data-ajax-update="#index_permanence">
 				@Html.Hidden("ClocherId", Model.Id)
 				<div class="form-group">
-					<label class="control-label">Ajouter permanence :</label>
+					<label class="control-label">Permanence :</label>
 				</div>
 				<div class="form-group">
-					<select name="JourSemaine" asp-items="Html.GetEnumSelectList<JourSemaine>()" class="form-control"></select>
+					<select name="Jour" asp-items="Html.GetEnumSelectList<JourSemaine>()" class="form-control"></select>
 				</div>
+				<p class="form-control-static">de</p>
 				<div class="form-group">
-					<input type="text" class="form-control" name="DebutHours" />
+					<div class="input-group">
+						<select name="DebutHours" class="form-control">
+							@for (int i = 8; i<=20; i++)
+							{
+								<option value="@i">@i</option>
+							}
+						</select>
+						<div class="input-group-addon">H</div>
+						<select name="DebutMinutes" class="form-control">
+							@for (int i = 0; i <= 55; i += 5)
+							{
+								<option value="@i">@String.Format("{0,0:00}",i)</option>
+							}
+						</select>
+						<div class="input-group-addon">mn</div>
+					</div>
 				</div>
+				<p class="form-control-static">à</p>
 				<div class="form-group">
-					<input type="text" class="form-control" name="DebutMinutes" />
-				</div>
-				<div class="form-group">
-					<input type="text" class="form-control" name="FinHours" />
-				</div>
-				<div class="form-group">
-					<input type="text" class="form-control" name="FinMinutes" />
+					<div class="input-group">
+						<select name="FinHours" class="form-control">
+							@for (int i = 8; i <= 20; i++)
+							{
+								<option value="@i">@i</option>
+							}
+						</select>
+						<div class="input-group-addon">H</div>
+						<select name="FinMinutes" class="form-control">
+							@for (int i = 0; i <= 55; i += 5)
+							{
+								<option value="@i">@String.Format("{0,0:00}", i)</option>
+							}
+						</select>
+						<div class="input-group-addon">mn</div>
+					</div>
 				</div>
 				<button type="submit" class="btn btn-default">Ajouter</button>
 			</form>
