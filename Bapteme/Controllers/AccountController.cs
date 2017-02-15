@@ -39,16 +39,27 @@ namespace Bapteme.Controllers
             _emailSender = emailSender;
             _smsSender = smsSender;
             _logger = loggerFactory.CreateLogger<AccountController>();
-        }
+		}
 
         //
         // GET: /Account/Login
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult Login(string returnUrl = null)
+        public async Task<IActionResult> Login(string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
-            return View();
+			string test = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+			if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+			{
+				if (HttpContext.User.Identity.IsAuthenticated == false)
+				{
+					var admin_user = _userManager.FindByEmailAsync("stephane.duteriez@gmail.com").Result;
+					await _signInManager.SignInAsync(admin_user, isPersistent: false);
+					string ReturnUrl = returnUrl == null ? "/" : returnUrl;
+					return LocalRedirect(ReturnUrl);
+				}
+			}
+			return View();
         }
 
 		[HttpGet]
