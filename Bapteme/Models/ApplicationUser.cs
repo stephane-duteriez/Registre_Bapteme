@@ -24,7 +24,7 @@ namespace Bapteme.Models
 
 		public Guid IdAdress { get; set; }
 
-		private string DisplayName
+		public string DisplayName
 		{
 			get {
 				return FirstName + " " + LastName;

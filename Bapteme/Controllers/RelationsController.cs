@@ -48,6 +48,7 @@ namespace Bapteme.Controllers
         // GET: Relations/Create
         public IActionResult Create()
         {
+			ViewBag.ListUsers = new SelectList(_userManager.Users.ToArray(), "Id", "DisplayName");
             return View();
         }
 
@@ -81,7 +82,8 @@ namespace Bapteme.Controllers
             {
                 return NotFound();
             }
-            return View(relation);
+			ViewBag.ListUsers = new SelectList(_userManager.Users.ToArray(), "Id", "DisplayName");
+			return View(relation);
         }
 
         // POST: Relations/Edit/5

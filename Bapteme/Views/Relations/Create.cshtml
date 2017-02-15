@@ -14,14 +14,14 @@
         <div class="form-group">
             <label asp-for="ParentId" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="ParentId" class="form-control" />
+				@Html.DropDownListFor(model => model.ParentId, new SelectList(ViewBag.ListUsers, "Value", "Text"), new { @class = "form-control" })
                 <span asp-validation-for="ParentId" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
             <label asp-for="ChildId" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="ChildId" class="form-control" />
+				@Html.DropDownListFor(model => model.ChildId, new SelectList(ViewBag.ListUsers, "Value", "Text"), new { @class = "form-control" })
                 <span asp-validation-for="ChildId" class="text-danger"></span>
             </div>
         </div>

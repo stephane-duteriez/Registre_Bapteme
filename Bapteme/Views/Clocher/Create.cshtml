@@ -14,7 +14,7 @@
             @Html.ValidationMessageFor(x=>x.Name)
         </p>
 		<p>
-			@Html.DropDownListFor(model => model.ParoisseId, new SelectList(     ViewBag.ParoissesName, "Value", "Text"))
+			@Html.DropDownListFor(model => model.ParoisseId, new SelectList(ViewBag.ParoissesName, "Value", "Text"))
 		</p>
         <p>
             <button type="submit">Creation Clocher</button>
