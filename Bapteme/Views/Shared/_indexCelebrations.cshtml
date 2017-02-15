@@ -52,7 +52,7 @@
 		</div>
 </div>
 
-<div class="modal fade modal-AddBapteme" id="AddBapteme" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+<div class="modal fade modal-AddBapteme" id="AddBapteme" tabindex="-1" role="dialog" aria-labelledby="newBapteme">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -69,6 +69,25 @@
 	</div>
 </div>
 
+<div class="modal fade modal-addContacts" id="AddContacts" tabindex="-1" role="dialog" aria-labelledby="addContacts">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="AddContactsModalLabel">Ajouter un Parent/Concact</h4>
+			</div>
+			<div class="modal-body">
+				<div id="listContacts"></div>
+				<div>
+					@Html.Partial("~/Views/Relations/_addContact.cshtml", null, null)
+					<input type="submit" class="btn btn-primary" form="AddContactForm" />
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+			</div>
+		</div>
+	</div>
+</div>
 
 <script type="text/javascript">
 	function delete_uParoisse(CelebrationId) {
@@ -96,12 +115,28 @@
 		$(".list-baptemes").on('show.bs.collapse', function () {
 			reloadBaptemes($(this).data('celebrationid'), false);
 		})
+		$('#AddContacts').on('show.bs.modal', function (event) {
+			console.log("load modale");
+			$.ajax({
+				url: "@Url.Action("Get" , "ApiRelations")",
+				type: "GET",
+				data: { ChildId: $("#ChildId").val(), __RequestVerificationToken: $("input[name='__RequestVerificationToken']").val() },
+				success: function (data) {
+					console.log("retour ajax get relations");
+					console.log(data);
+					$("#listContacts").html(data);
+				}
+			})
+		
+		})
 	};
 
-	function reloadBaptemesAfterAdd()
+	function reloadBaptemesAfterAdd(data)
 	{
 		$('#AddBapteme').modal('hide');
 		reloadBaptemes($("#CelebrationId").val(), true)
+		$('#ChildId').val(data);
+		$('#AddContacts').modal('show');
 	}
 
 	function reloadBaptemes(CelebrationId, force_reload) {
@@ -114,7 +149,6 @@
 				data: { CelebrationId: CelebrationId, __RequestVerificationToken: $("input[name='__RequestVerificationToken']").val() },
 				success: function (data)
 				{
-					console.log("finish");
 					$("#list_baptemes" + CelebrationId).html(data);
 				}
 			})

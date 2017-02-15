@@ -16,15 +16,17 @@ namespace Bapteme.Controllers
 	[Authorize(Policy = "IsAdmin")]
 	public class RelationsController : MyController
     {
+		protected readonly ApplicationDbContext _dbUsers;
 
-        public RelationsController(BaptemeDataContext db, UserManager<ApplicationUser> userManager) : base(db, userManager)
+		public RelationsController(BaptemeDataContext db, UserManager<ApplicationUser> userManager, ApplicationDbContext dbUsers) : base(db, userManager)
 		{
-        }
+			_dbUsers = dbUsers;
+		}
 
         // GET: Relations
         public async Task<IActionResult> Index()
         {
-            return View(await _db.Relations.ToListAsync());
+            return View(await _dbUsers.Relations.ToListAsync());
         }
 
         // GET: Relations/Details/5
@@ -35,7 +37,7 @@ namespace Bapteme.Controllers
                 return NotFound();
             }
 
-            var relation = await _db.Relations
+            var relation = await _dbUsers.Relations
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (relation == null)
             {
@@ -62,8 +64,8 @@ namespace Bapteme.Controllers
             if (ModelState.IsValid)
             {
                 relation.Id = Guid.NewGuid();
-                _db.Add(relation);
-                await _db.SaveChangesAsync();
+                _dbUsers.Add(relation);
+                await _dbUsers.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
             return View(relation);
@@ -77,7 +79,7 @@ namespace Bapteme.Controllers
                 return NotFound();
             }
 
-            var relation = await _db.Relations.SingleOrDefaultAsync(m => m.Id == id);
+            var relation = await _dbUsers.Relations.SingleOrDefaultAsync(m => m.Id == id);
             if (relation == null)
             {
                 return NotFound();
@@ -102,8 +104,8 @@ namespace Bapteme.Controllers
             {
                 try
                 {
-                    _db.Update(relation);
-                    await _db.SaveChangesAsync();
+                    _dbUsers.Update(relation);
+                    await _dbUsers.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -129,7 +131,7 @@ namespace Bapteme.Controllers
                 return NotFound();
             }
 
-            var relation = await _db.Relations
+            var relation = await _dbUsers.Relations
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (relation == null)
             {
@@ -144,15 +146,15 @@ namespace Bapteme.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var relation = await _db.Relations.SingleOrDefaultAsync(m => m.Id == id);
-            _db.Relations.Remove(relation);
-            await _db.SaveChangesAsync();
+            var relation = await _dbUsers.Relations.SingleOrDefaultAsync(m => m.Id == id);
+            _dbUsers.Relations.Remove(relation);
+            await _dbUsers.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
         private bool RelationExists(Guid id)
         {
-            return _db.Relations.Any(e => e.Id == id);
+            return _dbUsers.Relations.Any(e => e.Id == id);
         }
     }
 }

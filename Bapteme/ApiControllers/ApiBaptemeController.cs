@@ -58,7 +58,7 @@ namespace Bapteme.ApiControllers
 			UserParoisse uParoisse = new UserParoisse() { UserId = new_user.Id, ParoisseId = clocher.ParoisseId, Role=role.Contact };
 			await _db.AddAsync(uParoisse);
 			await _db.SaveChangesAsync();
-			return Ok();
+			return Ok(new_user.Id);
 		}
 
 		[Route("")]

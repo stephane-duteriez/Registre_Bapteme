@@ -18,7 +18,6 @@ namespace Bapteme.Data
 		public DbSet<Adresse> Adresses { get; set; }
 		public DbSet<Preparation> Preparations { get; set; }
 		public DbSet<Permanence> Permences { get; set; }
-		public DbSet<Relation> Relations { get; set; }
 
         public BaptemeDataContext(DbContextOptions<BaptemeDataContext> options)
          : base(options)

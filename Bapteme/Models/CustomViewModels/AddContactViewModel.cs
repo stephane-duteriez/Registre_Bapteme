@@ -7,8 +7,9 @@ using Bapteme.Models;
 
 namespace Bapteme.Models.CustomViewModels
 {
-	public class AddBaptemeViewModel:AddUserViewModel
-	{
-		public Guid CelebrationId { get; set; }
+    public class AddContactViewModel : AddUserViewModel
+    {
+		public string ChildId { get; set; }
+		public bool useSameAdresse { get; set; }
 	}
 }

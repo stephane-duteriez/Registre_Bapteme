@@ -57,3 +57,7 @@ textarea {
     font-style : italic;
     font-size : 0.8em;
 }
+
+.date {
+    max-width:280px;
+}
