@@ -3,6 +3,7 @@
 	  asp-action="post"
 	  data-ajax="true"
 	  data-ajax-methode="POST"
+	  data-ajax-success="reloadContactAfterAdd"
 	  id="AddContactForm">
 	<input type="hidden" name="ChildId" id="ChildId" value="" />
 	<div class="row">
@@ -10,56 +11,67 @@
 			<h4>Identité</h4>
 			<div class="form-group">
 				@Html.LabelFor(x => x.FirstName, new { @class = "control-label" })
-				@Html.TextBoxFor(x => x.FirstName, new { @class = "form-control" })
+				@Html.TextBoxFor(x => x.FirstName, new { @class = "form-control contact_to_clean" })
 			</div>
 			<div class="form-group">
 				@Html.LabelFor(x => x.LastName, new { @class = "control-label" })
-				@Html.TextBoxFor(x => x.LastName, new { @class = "form-control" })
+				@Html.TextBoxFor(x => x.LastName, new { @class = "form-control contact_to_clean" })
+			</div>
+			<div class="form-group">
+				<label asp-for="RelationType" class="col-md-2 control-label"></label>
+				<div class="col-md-10">
+					<select asp-for="RelationType" class="form-control" asp-items="Html.GetEnumSelectList<RelationType>()"></select>
+					<span asp-validation-for="RelationType" class="text-danger"></span>
+				</div>
 			</div>
 			<div class="form-group">
 				@Html.LabelFor(x => x.BirthDate)
-				<div class='input-group date' id='dtPickerBirthDate'>
-					@Html.TextBoxFor(x => x.BirthDate, new { @class = "form-control" })
+				<div class='input-group date' id='dtPickerBirthDateContact'>
+					@Html.TextBoxFor(x => x.BirthDate, new { @class = "form-control contact_to_clean" })
 					<span class="input-group-addon">
 						<span class="glyphicon glyphicon-calendar"></span>
 					</span>
 				</div>
 			</div>
 			<div class="form-group">
-				@Html.LabelFor(x => x.TelephoneMobile, new { @class = "control-label" })
+				@Html.LabelFor(x => x.TelephoneMobile, new { @class = "control-label contact_to_clean" })
 				@Html.TextBoxFor(x => x.TelephoneMobile, new { @class = "form-control" })
 			</div>
 			<div class="form-group">
-				@Html.LabelFor(x => x.Email, new { @class = "control-label" })
+				@Html.LabelFor(x => x.Email, new { @class = "control-label contact_to_clean" })
 				@Html.TextBoxFor(x => x.Email, new { @class = "form-control" })
 			</div>
 		</div>
 		<div class="col-md-6">
 			<h4>Adresse</h4>
 			<div class="form-group">
-				<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#newAdresse" aria-expanded="false" aria-controls="newAdresse">
-					Utiliser l'adresse de l'enfant.
-				</button>
+				<div class="checkbox">
+					<label class="btn btn-primary" type="button" data-toggle="collapse" data-target="#newAdresse" aria-expanded="false" aria-controls="newAdresse">
+						<input type="checkbox" name="useSameAdresse" value="true"/>
+							Utiliser l'adresse de l'enfant.
+						<input type="hidden" name="useSameAdresse" value="false"/>
+					</label>
+				</div>
 			</div>
 			<div class="collapse in" id="newAdresse" >
 				<div class="form-group">
-					@Html.LabelFor(x => x.Numero, new { @class = "control-label" })
+					@Html.LabelFor(x => x.Numero, new { @class = "control-label contact_to_clean" })
 					@Html.TextBoxFor(x => x.Numero, new { @class = "form-control" })
 				</div>
 				<div class="form-group">
-					@Html.LabelFor(x => x.Rue, new { @class = "control-label" })
+					@Html.LabelFor(x => x.Rue, new { @class = "control-label contact_to_clean" })
 					@Html.TextBoxFor(x => x.Rue, new { @class = "form-control" })
 				</div>
 				<div class="form-group">
-					@Html.LabelFor(x => x.CP, new { @class = "control-label" })
+					@Html.LabelFor(x => x.CP, new { @class = "control-label contact_to_clean" })
 					@Html.TextBoxFor(x => x.CP, new { @class = "form-control" })
 				</div>
 				<div class="form-group">
-					@Html.LabelFor(x => x.Ville, new { @class = "control-label" })
+					@Html.LabelFor(x => x.Ville, new { @class = "control-label contact_to_clean" })
 					@Html.TextBoxFor(x => x.Ville, new { @class = "form-control" })
 				</div>
 				<div class="form-group">
-					@Html.LabelFor(x => x.Complement, new { @class = "control-label" })
+					@Html.LabelFor(x => x.Complement, new { @class = "control-label contact_to_clean" })
 					@Html.TextBoxFor(x => x.Complement, new { @class = "form-control" })
 				</div>
 			</div>

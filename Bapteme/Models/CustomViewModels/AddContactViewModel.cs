@@ -11,5 +11,6 @@ namespace Bapteme.Models.CustomViewModels
     {
 		public string ChildId { get; set; }
 		public bool useSameAdresse { get; set; }
+		public RelationType RelationType { get; set; }
 	}
 }

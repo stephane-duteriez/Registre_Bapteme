@@ -32,6 +32,8 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.0-msbuild3-final" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Views\Adresse\" />
+    <Folder Include="Views\Adresse\" />
     <Folder Include="wwwroot\.well-known\" />
     <Folder Include="wwwroot\images\" />
   </ItemGroup>

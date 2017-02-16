@@ -112,18 +112,19 @@
 			locale: 'fr',
 			format: 'DD/MM/YYYY'
 		});
+		$('#dtPickerBirthDateContact').datetimepicker({
+			locale: 'fr',
+			format: 'DD/MM/YYYY'
+		});
 		$(".list-baptemes").on('show.bs.collapse', function () {
 			reloadBaptemes($(this).data('celebrationid'), false);
 		})
 		$('#AddContacts').on('show.bs.modal', function (event) {
-			console.log("load modale");
 			$.ajax({
 				url: "@Url.Action("Get" , "ApiRelations")",
 				type: "GET",
 				data: { ChildId: $("#ChildId").val(), __RequestVerificationToken: $("input[name='__RequestVerificationToken']").val() },
 				success: function (data) {
-					console.log("retour ajax get relations");
-					console.log(data);
 					$("#listContacts").html(data);
 				}
 			})
@@ -153,5 +154,16 @@
 				}
 			})
 		}
+	}
+
+	function reloadContactAfterAdd(data)
+	{
+		console.log("success");
+		$("#listContacts").html(data);
+		clean_contact_form();
+	}
+
+	function clean_contact_form() {
+		$(".contact_to_clean").val("");
 	}
 </script>
