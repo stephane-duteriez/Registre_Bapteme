@@ -39,7 +39,7 @@ namespace Bapteme.Controllers
 					return RedirectToAction("Post", "Paroisse", new { key = list_paroisse[0].Key });
 				}
 			}
-			list_paroisse = _db.Paroisses.ToList();
+			list_paroisse = _db.Paroisses.Where(x=>x.Demo == isDemo.False).ToList();
 			return View(list_paroisse);
 		}
 

@@ -7,8 +7,14 @@ using System.Threading.Tasks;
 
 namespace Bapteme.Models
 {
+	public enum isDemo { False, True};
 	public class Paroisse : BaseEntity
 	{
+		public Paroisse()
+		{
+			Demo = isDemo.False;
+		}
+
 		[Key]
 		public Guid Id { get; set; }
 
@@ -19,6 +25,7 @@ namespace Bapteme.Models
 		[DataType(DataType.Text)]
 		[StringLength(50, ErrorMessage = "Nom de la paroisse doit avoir un maximum de 50 charactères")]
 		public string Name { get; set; }
+
 		private string _key;
 		public string Key
 		{
@@ -33,6 +40,7 @@ namespace Bapteme.Models
 			set { _key = value; }
 		}
 
+		public isDemo Demo { get; set; }
 		public List<Clocher> Clochers { get; set; }
 	}
 }

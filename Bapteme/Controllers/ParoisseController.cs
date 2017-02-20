@@ -33,7 +33,7 @@ namespace Bapteme.Controllers
 				{
 					paroisses = await _db.UserParoisse.Where(x => x.UserId == user.Id).Select(x => x.Paroisse).Distinct().ToListAsync();
 				}
-			}            
+			}
             return View(paroisses.ToArray());
         }
 
