@@ -8,3 +8,41 @@
 {
 	@Html.ActionLink("Modifier", "Edit", "Clocher", new { keyParoisse = Model.Paroisse.Key, keyClocher = Model.Key }, new { @class = "btn btn-default" })
 }
+<div>
+	@Html.Partial("_indexPermanence", Model.Permanences)
+</div>
+
+<div id="index_bapteme">
+	@Html.Partial("_indexCelebrations", Model.Celebrations)
+</div>
+
+@if (ViewBag.roles.Contains(role.Manager) || User.IsInRole("Admin"))
+{
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<form class="form-inline"
+				  asp-controller="ApiCelebration"
+				  asp-action="post"
+				  data-ajax="true"
+				  data-ajax-method="POST"
+				  data-ajax-mode="replace"
+				  data-ajax-update="#index_bapteme"
+				  data-ajax-success="SetModalAddBapteme">
+				@Html.Hidden("ParoisseId", Model.ParoisseId)
+				@Html.Hidden("ClocherId", Model.Id)
+				<div class="form-group">
+					<label class="control-label">Ajouter célébration :</label>
+				</div>
+				<div class="form-group">
+					<div class='input-group date' id='datetimepicker'>
+						<input type='text' class="form-control" name="Date" />
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-calendar"></span>
+						</span>
+					</div>
+				</div>
+				<button type="submit" class="btn btn-default">Ajouter</button>
+			</form>
+		</div>
+	</div>
+}

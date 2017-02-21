@@ -14,10 +14,10 @@ namespace Bapteme.Controllers
     {
 		private readonly SignInManager<ApplicationUser> _signInManager;
 		private int nbr_weeks;
+		private string indice_unique;
 
 		public DemoController(BaptemeDataContext db, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager) : base(db, userManager)
 		{
-			nbr_weeks = get_nbr_weeks_since_begining_2017();
 			_signInManager = signInManager;
 		}
 
@@ -37,13 +37,22 @@ namespace Bapteme.Controllers
 
 		private async Task<ApplicationUser> _newDemoAsync()
 		{
+			Random random = new Random();
+
+			nbr_weeks = get_nbr_weeks_since_begining_2017();
+			indice_unique = random.Next(1, 999999).ToString();
+
 			ApplicationUser user = await creatDemoUser();
 
-			Paroisse demo_paroisse = new Paroisse() { Name = "Ma Paroisse" , Demo = isDemo.True};
+			Paroisse demo_paroisse = new Paroisse() { Name = "Ma Paroisse" , Demo = isDemo.True, Key = "maparoisse" + indice_unique};
 			_db.Add(demo_paroisse);
 
-			UserParoisse uParoisse = new UserParoisse() { ParoisseId = demo_paroisse.Id, UserId = user.Id, Role = role.Administrateur };
-			_db.Add(uParoisse);
+			List<UserParoisse> list_uParoisse = new List<UserParoisse>() {
+				new UserParoisse() {ParoisseId = demo_paroisse.Id, UserId = user.Id, Role = role.Administrateur },
+				new UserParoisse() {ParoisseId = demo_paroisse.Id, UserId = user.Id, Role = role.Manager }
+			};
+
+			await _db.AddRangeAsync(list_uParoisse);
 
 			List<Clocher> list_clochers = await creatClochers(demo_paroisse);
 
@@ -72,7 +81,10 @@ namespace Bapteme.Controllers
 				foreach (UserParoisse uParoisse in list_users_in_paroisse)
 				{
 					ApplicationUser user = await _userManager.FindByIdAsync(uParoisse.UserId);
-					_userManager.DeleteAsync(user);
+					if (user != null)
+					{
+						_userManager.DeleteAsync(user);
+					}
 					_db.Remove(uParoisse);
 				}
 				_db.Remove(paroisse);
@@ -82,10 +94,9 @@ namespace Bapteme.Controllers
 
 		private async Task<ApplicationUser> creatDemoUser()
 		{
-			Random random = new Random();
-			string indice_unique_username = random.Next(1, 999999).ToString();
+			
 			var user = new ApplicationUser();
-			user.UserName = "demo_manager" + indice_unique_username;
+			user.UserName = "demo_manager" + indice_unique;
 			user.Email = "default@default.com";
 			user.FirstName = "Demo";
 			user.LastName = "Manager";

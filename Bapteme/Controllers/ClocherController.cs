@@ -53,7 +53,7 @@ namespace Bapteme.Controllers
 		[Route("{keyParoisse}/{keyClocher}")]
 		public IActionResult Post(string keyParoisse, string keyClocher)
 		{
-			Clocher clocher = _db.Clochers.Include(c => c.Paroisse).FirstOrDefault(x => x.Key == keyClocher);
+			Clocher clocher = _db.Clochers.Include(c => c.Paroisse).Include(c=>c.Celebrations).Include(c=>c.Permanences).FirstOrDefault(x => x.Key == keyClocher);
 			ViewBag.roles = FindRole(GetCurrentUserAsync().Result, clocher.ParoisseId).Result;
 			return View(clocher);
 		}
