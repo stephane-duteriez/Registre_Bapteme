@@ -26,7 +26,7 @@ namespace Bapteme.Models
 
 		public Guid ClocherId { get; set; }
 
-		[ForeignKey("ColcherId")]
+		[ForeignKey("ClocherId")]
 		public Clocher Clocher { get; set; }
 	}
 }
