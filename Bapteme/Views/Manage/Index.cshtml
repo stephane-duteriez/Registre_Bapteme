@@ -1,71 +1,103 @@
-@model IndexViewModel
+﻿@model IndexViewModel
 @{
-    ViewData["Title"] = "Manage your account";
+    ViewData["Title"] = "Profil";
 }
 
 <h2>@ViewData["Title"].</h2>
 <p class="text-success">@ViewData["StatusMessage"]</p>
 
-<div>
-    <h4>Change your account settings</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>Password:</dt>
-        <dd>
-            @if (Model.HasPassword)
-            {
-                <a asp-controller="Manage" asp-action="ChangePassword" class="btn-bracketed">Change</a>
-            }
-            else
-            {
-                <a asp-controller="Manage" asp-action="SetPassword" class="btn-bracketed">Create</a>
-            }
-        </dd>
-        <dt>External Logins:</dt>
-        <dd>
-
-            @Model.Logins.Count <a asp-controller="Manage" asp-action="ManageLogins" class="btn-bracketed">Manage</a>
-        </dd>
-        <dt>Phone Number:</dt>
-        <dd>
-            <p>
-                Phone Numbers can used as a second factor of verification in two-factor authentication.
-                See <a href="https://go.microsoft.com/fwlink/?LinkID=532713">this article</a>
-                for details on setting up this ASP.NET application to support two-factor authentication using SMS.
-            </p>
-            @*@(Model.PhoneNumber ?? "None")
-                @if (Model.PhoneNumber != null)
-                {
-                    <br />
-                    <a asp-controller="Manage" asp-action="AddPhoneNumber" class="btn-bracketed">Change</a>
-                    <form asp-controller="Manage" asp-action="RemovePhoneNumber" method="post">
-                        [<button type="submit" class="btn-link">Remove</button>]
-                    </form>
-                }
-                else
-                {
-                    <a asp-controller="Manage" asp-action="AddPhoneNumber" class="btn-bracketed">Add</a>
-                }*@
-        </dd>
-
-        <dt>Two-Factor Authentication:</dt>
-        <dd>
-            <p>
-                There are no two-factor authentication providers configured. See <a href="https://go.microsoft.com/fwlink/?LinkID=532713">this article</a>
-                for setting up this application to support two-factor authentication.
-            </p>
-            @*@if (Model.TwoFactor)
-                {
-                    <form asp-controller="Manage" asp-action="DisableTwoFactorAuthentication" method="post" class="form-horizontal">
-                        Enabled <button type="submit" class="btn-link btn-bracketed">Disable</button>
-                    </form>
-                }
-                else
-                {
-                    <form asp-controller="Manage" asp-action="EnableTwoFactorAuthentication" method="post" class="form-horizontal">
-                        <button type="submit" class="btn-link btn-bracketed">Enable</button> Disabled
-                    </form>
-                }*@
-        </dd>
-    </dl>
+<div class="form-inline">
+    <div class="form-group">
+        <p class="form-control-static">Mot de passe :</p>
+    </div>
+    @if (Model.HasPassword)
+    {
+        <a asp-controller="Manage" asp-action="ChangePassword" class="btn btn-default">Changer</a>
+    }
+    else
+    {
+        <a asp-controller="Manage" asp-action="SetPassword" class="btn btn-default">Ajouter</a>
+    }
 </div>
+
+<form id="formProfile" class="form-horizontal">
+	<div asp-validation-summary="All" class="text-danger"></div>
+	<div id="success" class="text-primary"></div>
+	<input asp-for="Id" hidden />
+	<div class="form-group">
+		<label asp-for="FirstName" class="col-md-4 control-label"></label>
+		<div class="col-md-8">
+			<input asp-for="FirstName" class="form-control" />
+			<span asp-validation-for="FirstName" class="text-danger"></span>
+		</div>
+	</div>
+	<div class="form-group">
+		<label asp-for="LastName" class="col-md-4 control-label"></label>
+		<div class="col-md-8">
+			<input asp-for="LastName" class="form-control" />
+			<span asp-validation-for="LastName" class="text-danger"></span>
+		</div>
+	</div>
+	<div class="form-group">
+		<label asp-for="BirthName" class="col-md-4 control-label"></label>
+		<div class="col-md-8">
+			<input asp-for="BirthName" class="form-control" />
+			<span asp-validation-for="BirthName" class="text-danger"></span>
+		</div>
+	</div>
+	<div class="form-group">
+		<label asp-for="TelephonMobile" class="col-md-4 form-label"></label>
+		<div class="col-md-8">
+			<input asp-for="TelephonMobile" class="form-control" />
+			<span asp-validation-for="TelephonMobile" class="text-danger"></span>
+		</div>
+	</div>
+	<div class="form-group">
+		<label asp-for="BirthDate" class="col-md-4 form-label"></label>
+		<div class="input-group date col-md-8" id="datetimepicker">
+			<input asp-for="BirthDate" class="form-control" />
+			<span class="input-group-addon">
+				<span class="glyphicon glyphicon-calendar"></span>
+			</span>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<div class="col-md-offset-2 col-md-10">
+			<button type="submit" class="btn btn-default">Modifier</button>
+		</div> 
+	</div>
+</form>
+
+@section Scripts {
+	@{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
+
+<script type="text/javascript">
+	window.onload = function () {
+		var date = new Date(@Model.BirthDate.Year, @Model.BirthDate.Month, @Model.BirthDate.Day);
+		console.log(date);
+		$('#datetimepicker').datetimepicker({
+			locale: 'fr',
+			format: 'DD/MM/YYYY'
+		});
+
+		$("#datetimepicker").data("DateTimePicker").date(date);
+
+
+		$("#formProfile").submit(function (event) {
+			event.preventDefault();
+			$("#success").html("");
+			$.ajax({
+				type: "PUT",
+				url: "@Url.Action("Put", "ApiManage", new { Id = Model.Id })",
+				data: $('#formProfile').serialize(),
+				dataType: "json",
+				success: function (data) {
+					$("#success").html("Modification réalisée avec succès.");
+				}
+			});
+		});
+	};
+</script>
+

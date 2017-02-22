@@ -10,18 +10,18 @@ namespace Bapteme.Models.ManageViewModels
     {
         [Required]
         [DataType(DataType.Password)]
-        [Display(Name = "Current password")]
+        [Display(Name = "Mot de passe actuelle")]
         public string OldPassword { get; set; }
 
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [StringLength(100, ErrorMessage = "Le {0} doit avoir au moin {2} caractères et au maximum {1} .", MinimumLength = 6)]
         [DataType(DataType.Password)]
-        [Display(Name = "New password")]
+        [Display(Name = "Nouveau mot de passe")]
         public string NewPassword { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm new password")]
-        [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
+        [Display(Name = "Confirmer nouveau mot de passe")]
+        [Compare("NewPassword", ErrorMessage = "Le nouveau mot de passe et sa confirmation ne sont pas identiques.")]
         public string ConfirmPassword { get; set; }
     }
 }

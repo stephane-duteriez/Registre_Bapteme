@@ -41,10 +41,10 @@ namespace Bapteme.Controllers
         public async Task<IActionResult> Index(ManageMessageId? message = null)
         {
             ViewData["StatusMessage"] =
-                message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
-                : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
+                message == ManageMessageId.ChangePasswordSuccess ? "Votre mot de passe a été changé."
+                : message == ManageMessageId.SetPasswordSuccess ? "Votre mot de passe a été ajouté."
                 : message == ManageMessageId.SetTwoFactorSuccess ? "Your two-factor authentication provider has been set."
-                : message == ManageMessageId.Error ? "An error has occurred."
+                : message == ManageMessageId.Error ? "Une erreure s'est produite."
                 : message == ManageMessageId.AddPhoneSuccess ? "Your phone number was added."
                 : message == ManageMessageId.RemovePhoneSuccess ? "Your phone number was removed."
                 : "";
@@ -56,7 +56,13 @@ namespace Bapteme.Controllers
                 PhoneNumber = await _userManager.GetPhoneNumberAsync(user),
                 TwoFactor = await _userManager.GetTwoFactorEnabledAsync(user),
                 Logins = await _userManager.GetLoginsAsync(user),
-                BrowserRemembered = await _signInManager.IsTwoFactorClientRememberedAsync(user)
+                BrowserRemembered = await _signInManager.IsTwoFactorClientRememberedAsync(user),
+				Id = user.Id,
+				FirstName = user.FirstName,
+				LastName = user.LastName,
+				BirthDate = user.BirthDate,
+				BirthName = user.BirthName,
+				TelephonMobile = user.TelephoneMobile
             };
             return View(model);
         }

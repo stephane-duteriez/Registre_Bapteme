@@ -49,7 +49,8 @@ namespace Bapteme.ApiControllers
 
         // PUT: api/ApiPermanences/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPermanence([FromRoute] Guid id, [FromBody] Permanence permanence)
+		[Authorize]
+		public async Task<IActionResult> PutPermanence([FromRoute] Guid id, [FromBody] Permanence permanence)
         {
             if (!ModelState.IsValid)
             {
@@ -118,7 +119,8 @@ namespace Bapteme.ApiControllers
 
         // DELETE: api/ApiPermanences/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePermanence([FromRoute] Guid id)
+		[Authorize]
+		public async Task<IActionResult> DeletePermanence([FromRoute] Guid id)
         {
             if (!ModelState.IsValid)
             {
