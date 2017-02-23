@@ -9,6 +9,7 @@ using Bapteme.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Bapteme.Controllers;
+using Bapteme.Models.CustomViewModels;
 
 namespace Bapteme.ApiControllers
 {
@@ -32,17 +33,25 @@ namespace Bapteme.ApiControllers
 		[Authorize]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Post([FromForm] Celebration celebration)
+		public async Task<IActionResult> Post([FromForm] AddCelebrationViewModel celebration)
 		{
 			//if (!ModelState.IsValid)
 			//{
 			//	return BadRequest(ModelState);
 			//}
-			await _db.Celebrations.AddAsync(celebration);
+			await _db.Celebrations.AddAsync(celebration.Celebration);
 			await _db.SaveChangesAsync();
 			Clocher clocher = await _db.Clochers.Where(x => x.Id == celebration.ClocherId).FirstAsync();
 			ViewBag.roles = await FindRole(await GetCurrentUserAsync(), clocher.ParoisseId);
-			List<Celebration> l_celebration = await _db.Celebrations.Include("Clocher").Where(x => x.Clocher.ParoisseId == clocher.ParoisseId).Where(x=>x.Date >= DateTime.Now.AddDays(-7)).OrderBy(x=>x.Date).ToListAsync();
+			List<Celebration> l_celebration = new List<Celebration>();
+			if (celebration.single_clocher)
+			{
+				l_celebration = await _db.Celebrations.Include("Clocher").Where(x => x.ClocherId == celebration.ClocherId).Where(x => x.Date >= DateTime.Now.AddDays(-7)).OrderBy(x => x.Date).ToListAsync();
+			}
+			else
+			{
+				l_celebration = await _db.Celebrations.Include("Clocher").Where(x => x.Clocher.ParoisseId == clocher.ParoisseId).Where(x=>x.Date >= DateTime.Now.AddDays(-7)).OrderBy(x=>x.Date).ToListAsync();
+			}
 			return PartialView("_indexCelebrations", l_celebration);
 		}
 

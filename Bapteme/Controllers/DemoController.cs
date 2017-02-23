@@ -172,20 +172,29 @@ namespace Bapteme.Controllers
 			int nbr = 15;
 			List<DateTime> list_default_dates = generateDates(nbr);
 			List<Adresse> list_adresses = generateAdresses(nbr);
-			List<string> list_FirstNames = generateFirstName(nbr);
+			List<string> list_FirstNames = generateFirstName(nbr*2);
 			List<string> list_lastNames = generateLastname(nbr);
 			List<ApplicationUser> list_users = new List<ApplicationUser>();
+			List<Relation> list_relations = new List<Relation>();
 			for (int i = 0; i < nbr; i++)
 			{
-
+				string new_Lastname = list_lastNames[i];
 				list_users.Add(new ApplicationUser()
 				{
 					FirstName = list_FirstNames[i],
-					LastName = list_lastNames[i],
+					LastName = new_Lastname,
 					IdAdress = list_adresses[i].Id,
 					BirthDate = list_default_dates[i],
-					CelebrationId = list_celebration[random.Next(0, list_celebration.Count())].Id					
+					CelebrationId = list_celebration[random.Next(0, list_celebration.Count())].Id
 				});
+				list_users.Add(new ApplicationUser()
+				{
+					FirstName = list_FirstNames[i+nbr],
+					LastName = new_Lastname,
+					IdAdress = list_adresses[i].Id,
+					BirthDate = list_default_dates[i]
+				});
+				list_relations.Add(new Relation() { ChildId=list_users[i*2].Id, ParentId=list_users[i*2+1].Id, RelationType=RelationType.Autre});
 			}
 			await _dbUsers.AddRangeAsync(list_users);
 			List<UserParoisse> list_uParoisses = new List<UserParoisse>();
@@ -227,7 +236,8 @@ namespace Bapteme.Controllers
 					Numero = random.Next(1, 300).ToString(),
 					CP = list_villes[indice_ville].CP,
 					Ville = list_villes[indice_ville].Name,
-					Rue = list_rues[random.Next(0, list_rues.Count())]
+					Rue = list_rues[random.Next(0, list_rues.Count())],
+					TelephoneFix = "0123456789"
 				});
 			}
 			_db.AddRangeAsync(list_adresses);

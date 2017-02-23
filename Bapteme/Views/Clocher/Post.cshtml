@@ -30,6 +30,7 @@
 				  data-ajax-success="SetModalAddBapteme">
 				@Html.Hidden("ParoisseId", Model.ParoisseId)
 				@Html.Hidden("ClocherId", Model.Id)
+				@Html.Hidden("single_clocher", true)
 				<div class="form-group">
 					<label class="control-label">Ajouter célébration :</label>
 				</div>
@@ -45,4 +46,15 @@
 			</form>
 		</div>
 	</div>
+}
+
+@section scripts {
+	<script type="text/javascript">
+		window.onload = function () {
+				$('#datetimepicker').datetimepicker({
+					sideBySide: true,
+					locale: 'fr'
+				});
+		};
+	</script>
 }
