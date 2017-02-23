@@ -13,16 +13,22 @@ namespace Bapteme.Controllers
     public class DemoController : MyController
     {
 		private readonly SignInManager<ApplicationUser> _signInManager;
+		private ApplicationDbContext _dbUsers;
+
+		private Random random;
+
 		private int nbr_weeks;
 		private string indice_unique;
 
-		public DemoController(BaptemeDataContext db, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager) : base(db, userManager)
+		public DemoController(BaptemeDataContext db, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ApplicationDbContext dbUsers) : base(db, userManager)
 		{
+			_dbUsers = dbUsers;
 			_signInManager = signInManager;
 		}
 
 		public async Task<IActionResult> Start()
         {
+			random = new Random();
 			ApplicationUser user = await _newDemoAsync();
 			await _signInManager.SignInAsync(user, false);
 			return RedirectToAction("Index", "Home", "");
@@ -37,8 +43,6 @@ namespace Bapteme.Controllers
 
 		private async Task<ApplicationUser> _newDemoAsync()
 		{
-			Random random = new Random();
-
 			nbr_weeks = get_nbr_weeks_since_begining_2017();
 			indice_unique = random.Next(1, 999999).ToString();
 
@@ -58,9 +62,12 @@ namespace Bapteme.Controllers
 
 			await creatPermanences(list_clochers);
 
-			await creatCelebrations(list_clochers);
+			List<Celebration> list_celebration = await creatCelebrations(list_clochers);
+
+			await creatUserInCelebration(list_celebration, demo_paroisse.Id);
 
 			await _db.SaveChangesAsync();
+			await _dbUsers.SaveChangesAsync();
 			return user;
 		}
 
@@ -158,6 +165,95 @@ namespace Bapteme.Controllers
 			await _db.AddRangeAsync(list_celebrations);
 
 			return list_celebrations;
+		}
+
+		private async Task<List<ApplicationUser>> creatUserInCelebration(List<Celebration> list_celebration, Guid paroisseId)
+		{
+			int nbr = 15;
+			List<DateTime> list_default_dates = generateDates(nbr);
+			List<Adresse> list_adresses = generateAdresses(nbr);
+			List<string> list_FirstNames = generateFirstName(nbr);
+			List<string> list_lastNames = generateLastname(nbr);
+			List<ApplicationUser> list_users = new List<ApplicationUser>();
+			for (int i = 0; i < nbr; i++)
+			{
+
+				list_users.Add(new ApplicationUser()
+				{
+					FirstName = list_FirstNames[i],
+					LastName = list_lastNames[i],
+					IdAdress = list_adresses[i].Id,
+					BirthDate = list_default_dates[i],
+					CelebrationId = list_celebration[random.Next(0, list_celebration.Count())].Id					
+				});
+			}
+			await _dbUsers.AddRangeAsync(list_users);
+			List<UserParoisse> list_uParoisses = new List<UserParoisse>();
+			for (int i = 0; i<nbr; i++)
+			{
+				list_uParoisses.Add(new UserParoisse() { ParoisseId = paroisseId, UserId = list_users[i].Id, Role=role.Contact });
+			}
+			await _db.AddRangeAsync(list_uParoisses);
+			return list_users;
+		}
+
+		private List<DateTime> generateDates(int nbr)
+		{
+			List<DateTime> list_date = new List<DateTime>();
+			for (int i = 0; i<nbr; i++)
+			{
+				list_date.Add(new DateTime(2016, random.Next(11, 12), random.Next(1, 30)));
+			}
+			return list_date;
+		}
+
+		private List<Adresse> generateAdresses(int nbr)
+		{
+			List<Adresse> list_adresses = new List<Adresse>();
+			List<Ville> list_villes = new List<Ville>()
+			{
+				new Ville() { Name = "Carpin", CP = "46587"},
+				new Ville() { Name = "Liberty", CP= "78451"},
+				new Ville() { Name = "Balty", CP="94564"},
+				new Ville() { Name = "Arvin", CP="12567"},
+				new Ville() { Name = "Farière", CP="82463"}
+			};
+			List<string> list_rues = new List<string>() { "rue Lavender", "rue de la Liberté", "rue de la mairie", "rue de l'Église", "rue de Paris", "rue des Moineaux" };
+			for (int i=0; i<nbr; i++)
+			{
+				int indice_ville = random.Next(0, list_villes.Count());
+				list_adresses.Add(new Adresse()
+				{
+					Numero = random.Next(1, 300).ToString(),
+					CP = list_villes[indice_ville].CP,
+					Ville = list_villes[indice_ville].Name,
+					Rue = list_rues[random.Next(0, list_rues.Count())]
+				});
+			}
+			_db.AddRangeAsync(list_adresses);
+			return list_adresses;
+		}
+
+		private List<string> generateFirstName(int nbr)
+		{
+			List<string> init_firstNames = new List<string>() { "Céline", "Christophe","Alexandra", "Olivier", "Marc", "Mathieu", "Veronique", "Rose", "Alexandre", "Gérémie", "Lucie", "Daniel", "Émily"};
+			List<string> list_firstNames = new List<string>();
+			for (int i=0; i<nbr; i++)
+			{
+				list_firstNames.Add(init_firstNames[random.Next(0, init_firstNames.Count())]);
+			}
+			return list_firstNames;
+		}
+
+		private List<string> generateLastname(int nbr)
+		{
+			List<string> init_lastname = new List<string>() { "Majory", "Perreault", "Loiseau", "Busson", "Desnoyer", "Bler", "Pelchat", "Michel", "Migneault", "Souplet", "Lapierre", "Giguère", "Leroux" };
+			List<string> list_firstNames = new List<string>();
+			for (int i=0; i<nbr; i++)
+			{
+				list_firstNames.Add(init_lastname[random.Next(0, init_lastname.Count())]);
+			}
+			return list_firstNames;
 		}
 
 		private int get_nbr_weeks_since_begining_2017()
