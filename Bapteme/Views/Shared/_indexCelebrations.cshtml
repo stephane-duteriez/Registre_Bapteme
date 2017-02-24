@@ -39,7 +39,7 @@
 													data-celebrationid="@celebration.Id">
 												Ajouter Bapteme
 											</button>
-											<button onclick="delete_uParoisse('@celebration.Id')" class="btn btn-danger">
+											<button onclick="delete_Celebration('@celebration.Id')" class="btn btn-danger">
 												<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
 											</button>
 										}
@@ -90,7 +90,7 @@
 </div>
 
 <script type="text/javascript">
-	function delete_uParoisse(CelebrationId) {
+	function delete_Celebration(CelebrationId) {
 		$.ajax({
 			url: "@Url.Action("Delete", "ApiCelebration")",
 			type: "DELETE",

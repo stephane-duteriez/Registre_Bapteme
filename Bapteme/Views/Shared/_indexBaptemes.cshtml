@@ -6,7 +6,7 @@
 		<tbody>
 				@foreach (ApplicationUser user in Model)
 				{
-					<tr id="@("ID" + user.Id)">
+					<tr id="@("ID" + user.Id)" data-href="@Url.Action("Edit", "Manage", new { Id = user.Id })" onclick="clickrow(this)">
 						<td>@user.FirstName</td>
 						<td>@user.LastName</td>
 					</tr>

@@ -67,9 +67,32 @@ namespace Bapteme.Controllers
             return View(model);
         }
 
-        //
-        // POST: /Manage/RemoveLogin
-        [HttpPost]
+		[HttpGet]
+		[Authorize]
+		[Route("Contact/{Id}")]
+		public async Task<IActionResult> Edit(string Id)
+		{
+			var user = await _userManager.FindByIdAsync(Id);
+			var model = new IndexViewModel
+			{
+				HasPassword = await _userManager.HasPasswordAsync(user),
+				PhoneNumber = await _userManager.GetPhoneNumberAsync(user),
+				TwoFactor = await _userManager.GetTwoFactorEnabledAsync(user),
+				Logins = await _userManager.GetLoginsAsync(user),
+				BrowserRemembered = await _signInManager.IsTwoFactorClientRememberedAsync(user),
+				Id = user.Id,
+				FirstName = user.FirstName,
+				LastName = user.LastName,
+				BirthDate = user.BirthDate,
+				BirthName = user.BirthName,
+				TelephonMobile = user.TelephoneMobile
+			};
+			return View("Index", model);
+		}
+
+		//
+		// POST: /Manage/RemoveLogin
+		[HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveLogin(RemoveLoginViewModel account)
         {

@@ -72,10 +72,14 @@ else
 @section scripts {
 	<script type="text/javascript">
 		window.onload = function () {
-				$('#datetimepicker').datetimepicker({
-					sideBySide: true,
-					locale: 'fr'
-				});
+			$('#datetimepicker').datetimepicker({
+				sideBySide: true,
+				locale: 'fr'
+			});
 		};
+		function clickrow(element)
+		{
+			window.location = $(element).data('href');
+		}
 	</script>
 }
