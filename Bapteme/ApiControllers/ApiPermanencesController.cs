@@ -113,14 +113,16 @@ namespace Bapteme.ApiControllers
                     throw;
                 }
             }
-			List<Permanence> l_permanence = await _db.Permences.Where(x => x.ClocherId == permanence.ClocherId).ToListAsync();
+			List<Permanence> l_permanence = await _db.Permences.Include(x=>x.Clocher).Where(x => x.ClocherId == permanence.ClocherId).ToListAsync();
+			ViewBag.roles = await FindRole(await GetCurrentUserAsync(), l_permanence[0].Clocher.ParoisseId);
 			return PartialView("_indexPermanence", l_permanence);
         }
 
         // DELETE: api/ApiPermanences/5
-        [HttpDelete("{id}")]
+        [HttpDelete]
 		[Authorize]
-		public async Task<IActionResult> DeletePermanence([FromRoute] Guid id)
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> DeletePermanence(Guid id)
         {
             if (!ModelState.IsValid)
             {
@@ -136,7 +138,7 @@ namespace Bapteme.ApiControllers
             _db.Permences.Remove(permanence);
             await _db.SaveChangesAsync();
 
-            return Ok(permanence);
+            return Ok();
         }
 
         private bool PermanenceExists(Guid id)

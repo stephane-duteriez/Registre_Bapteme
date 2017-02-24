@@ -30,10 +30,10 @@
 			</div>
 		</div>
 	</div>
-	<div id="index_permanence">
-		@Html.Partial("_indexPermanence", (List<Permanence>)ViewBag.Permanences)
-	</div>
 </form>
+	<div id="index_permanence">
+		@Html.Partial("_indexPermanence", Model.Permanences)
+	</div>
 	<div class="panel panel-default">
 		<div class="panel-body">
 			<form class="form-inline"

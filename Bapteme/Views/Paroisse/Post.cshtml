@@ -70,10 +70,12 @@ else
 }
 
 @section scripts {
-	window.onload = function () {
-            $('#datetimepicker').datetimepicker({
-                sideBySide: true,
-				locale: 'fr'
-            });
-	};
+	<script type="text/javascript">
+		window.onload = function () {
+				$('#datetimepicker').datetimepicker({
+					sideBySide: true,
+					locale: 'fr'
+				});
+		};
+	</script>
 }

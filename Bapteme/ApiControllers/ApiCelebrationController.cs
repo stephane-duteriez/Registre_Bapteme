@@ -61,9 +61,20 @@ namespace Bapteme.ApiControllers
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Delete(Guid CelebrationId)
 		{
+			if (!ModelState.IsValid)
+			{
+				return BadRequest(ModelState);
+			}
+
 			Celebration celebration_to_delete = await _db.Celebrations.FindAsync(CelebrationId);
+			if (celebration_to_delete == null)
+			{
+				return NotFound();
+			}
+
 			_db.Celebrations.Remove(celebration_to_delete);
 			await _db.SaveChangesAsync();
+
 			return Ok();
 		}
 
