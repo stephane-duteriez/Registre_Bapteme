@@ -46,14 +46,14 @@
 		</div>
 	</div>
 	<div class="form-group">
-		<label asp-for="TelephonMobile" class="col-md-4 form-label"></label>
+		<label asp-for="TelephonMobile" class="col-md-4 control-label"></label>
 		<div class="col-md-8">
 			<input asp-for="TelephonMobile" class="form-control" />
 			<span asp-validation-for="TelephonMobile" class="text-danger"></span>
 		</div>
 	</div>
 	<div class="form-group">
-		<label asp-for="BirthDate" class="col-md-4 form-label"></label>
+		<label asp-for="BirthDate" class="col-md-4 control-label"></label>
 		<div class="input-group date col-md-8" id="datetimepicker">
 			<input asp-for="BirthDate" class="form-control" />
 			<span class="input-group-addon">
@@ -69,35 +69,102 @@
 	</div>
 </form>
 
+<div id="listContacts"></div>
+
+<button type="button" class="btn btn-primary"
+		data-toggle="modal"
+		data-target="#AddContact"
+		data-userId="@Model.Id">
+	Ajouter Contact
+</button>
+
+<div class="modal fade modal-addContacts" id="AddContact" tabindex="-1" role="dialog" aria-labelledby="addContacts">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="AddContactsModalLabel">Ajouter un Parent/Concact</h4>
+			</div>
+			<div class="modal-body">
+				<div>
+					@Html.Partial("~/Views/Relations/_addContact.cshtml", null, null)
+					<input type="submit" class="btn btn-primary" form="AddContactForm" />
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
 @section Scripts {
 	@{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
-}
+	<script type="text/javascript">
+		window.onload = function () {
+			var date = new Date(@Model.BirthDate.Year, @Model.BirthDate.Month, @Model.BirthDate.Day);
+			$('.date').datetimepicker({
+				locale: 'fr',
+				format: 'DD/MM/YYYY'
+			});
 
-<script type="text/javascript">
-	window.onload = function () {
-		var date = new Date(@Model.BirthDate.Year, @Model.BirthDate.Month, @Model.BirthDate.Day);
-		console.log(date);
-		$('#datetimepicker').datetimepicker({
-			locale: 'fr',
-			format: 'DD/MM/YYYY'
-		});
+			$("#datetimepicker").data("DateTimePicker").date(date);
+			$('#ChildId').val("@Model.Id");
 
-		$("#datetimepicker").data("DateTimePicker").date(date);
+			$("#formProfile").submit(function (event) {
+				event.preventDefault();
+				$("#success").html("");
+				$.ajax({
+					type: "PUT",
+					url: "@Url.Action("Put", "ApiManage", new { Id = Model.Id })",
+					data: $('#formProfile').serialize(),
+					dataType: "json",
+					success: function (data) {
+						$("#success").html("Modification réalisée avec succès.");
+					}
+				});
+			});
 
+			loadContact();
+		};
 
-		$("#formProfile").submit(function (event) {
-			event.preventDefault();
-			$("#success").html("");
+		function loadContact() {
 			$.ajax({
-				type: "PUT",
-				url: "@Url.Action("Put", "ApiManage", new { Id = Model.Id })",
-				data: $('#formProfile').serialize(),
-				dataType: "json",
+				url: "@Url.Action("Get" , "ApiRelations")",
+				type: "GET",
+				data: { ChildId: $("#Id").val(), __RequestVerificationToken: $("input[name='__RequestVerificationToken']").val() },
 				success: function (data) {
-					$("#success").html("Modification réalisée avec succès.");
+					$("#listContacts").html(data);
 				}
 			});
-		});
-	};
-</script>
+		};
+
+		function reloadContactAfterAdd(data) {
+			$("#listContacts").html(data);
+			clean_contact_form();
+			$('#AddContact').modal('hide');
+		};
+
+		function clean_contact_form() {
+			$(".contact_to_clean").val("");
+		};
+
+		function remove_relation(RelationId) {
+			$.ajax({
+				url: "@Url.Action("Delete", "ApiRelations")",
+				type: "DELETE",
+				data: {
+					ContactId: "@Model.Id", RelationId: RelationId, __RequestVerificationToken: $("input[name='__RequestVerificationToken']").val()
+				},
+				success: function () {
+					$("#ID" + RelationId).remove();
+				}
+			});
+		};
+
+	</script>
+}
+
 

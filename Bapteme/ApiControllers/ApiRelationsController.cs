@@ -93,5 +93,28 @@ namespace Bapteme.ApiControllers
 			List<ApplicationUser> list_contacts = await _dbUsers.Relations.Where(x => x.ChildId == new_contact.ChildId).Select(x => x.Parent).ToListAsync();
 			return PartialView("_listContacts", list_contacts);
 		}
+
+		[Route("")]
+		[Authorize]
+		[ValidateAntiForgeryToken]
+		[HttpDelete]
+		public async Task<IActionResult> Delete(string ContactId, string RelationId)
+		{
+			if (!ModelState.IsValid)
+			{
+				return BadRequest(ModelState);
+			}
+
+			Relation relation = await _dbUsers.Relations.SingleOrDefaultAsync(m => m.ChildId == ContactId && m.ParentId==RelationId);
+			if (relation == null)
+			{
+				return NotFound();
+			}
+
+			_dbUsers.Remove(relation);
+			await _dbUsers.SaveChangesAsync();
+
+			return Ok();
+		}
 	}
 }
