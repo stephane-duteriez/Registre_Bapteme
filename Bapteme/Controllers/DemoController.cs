@@ -7,6 +7,11 @@ using Bapteme.Data;
 using Microsoft.AspNetCore.Identity;
 using Bapteme.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.PlatformAbstractions;
+using System.IO;
+using System.Reflection;
+using Microsoft.AspNetCore.Hosting;
+using Newtonsoft.Json;
 
 namespace Bapteme.Controllers
 {
@@ -14,16 +19,18 @@ namespace Bapteme.Controllers
     {
 		private readonly SignInManager<ApplicationUser> _signInManager;
 		private ApplicationDbContext _dbUsers;
+		private IHostingEnvironment _env;
 
 		private Random random;
 
 		private int nbr_weeks;
 		private string indice_unique;
 
-		public DemoController(BaptemeDataContext db, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ApplicationDbContext dbUsers) : base(db, userManager)
+		public DemoController(BaptemeDataContext db, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ApplicationDbContext dbUsers, IHostingEnvironment env) : base(db, userManager)
 		{
 			_dbUsers = dbUsers;
 			_signInManager = signInManager;
+			_env = env;
 		}
 
 		public async Task<IActionResult> Start()
@@ -85,16 +92,26 @@ namespace Bapteme.Controllers
 				_db.RemoveRange(list_clochers);
 
 				List<UserParoisse> list_users_in_paroisse = await _db.UserParoisse.Where(x => x.ParoisseId == paroisse.Id).ToListAsync();
+				List<ApplicationUser> list_users = new List<ApplicationUser>() ;
+				List<Relation> list_relations = new List<Relation>();
 				foreach (UserParoisse uParoisse in list_users_in_paroisse)
 				{
 					ApplicationUser user = await _userManager.FindByIdAsync(uParoisse.UserId);
 					if (user != null)
 					{
-						_userManager.DeleteAsync(user);
+						list_users.Add(user);
+						Relation relation = await _dbUsers.Relations.Where(x => x.ChildId == user.Id || x.ParentId == user.Id).FirstOrDefaultAsync();
+						if (relation != null)
+						{
+							list_relations.Add(relation);
+						}
 					}
-					_db.Remove(uParoisse);
 				}
+				_dbUsers.RemoveRange(list_relations);
+				_dbUsers.RemoveRange(list_users);
+				_db.RemoveRange(list_users_in_paroisse);
 				_db.Remove(paroisse);
+				_dbUsers.SaveChanges();
 				_db.SaveChanges();
 			}
 		}
@@ -197,8 +214,10 @@ namespace Bapteme.Controllers
 				list_relations.Add(new Relation() { ChildId=list_users[i*2].Id, ParentId=list_users[i*2+1].Id, RelationType=RelationType.Autre});
 			}
 			await _dbUsers.AddRangeAsync(list_users);
+			await _dbUsers.AddRangeAsync(list_relations);
+
 			List<UserParoisse> list_uParoisses = new List<UserParoisse>();
-			for (int i = 0; i<nbr; i++)
+			for (int i = 0; i<list_users.Count; i++)
 			{
 				list_uParoisses.Add(new UserParoisse() { ParoisseId = paroisseId, UserId = list_users[i].Id, Role=role.Contact });
 			}
@@ -246,7 +265,7 @@ namespace Bapteme.Controllers
 
 		private List<string> generateFirstName(int nbr)
 		{
-			List<string> init_firstNames = new List<string>() { "Céline", "Christophe","Alexandra", "Olivier", "Marc", "Mathieu", "Veronique", "Rose", "Alexandre", "Gérémie", "Lucie", "Daniel", "Émily"};
+			List<string> init_firstNames = getListFromFile("FirstName.json");
 			List<string> list_firstNames = new List<string>();
 			for (int i=0; i<nbr; i++)
 			{
@@ -257,7 +276,7 @@ namespace Bapteme.Controllers
 
 		private List<string> generateLastname(int nbr)
 		{
-			List<string> init_lastname = new List<string>() { "Majory", "Perreault", "Loiseau", "Busson", "Desnoyer", "Bler", "Pelchat", "Michel", "Migneault", "Souplet", "Lapierre", "Giguère", "Leroux" };
+			List<string> init_lastname = getListFromFile("LastName.json");
 			List<string> list_firstNames = new List<string>();
 			for (int i=0; i<nbr; i++)
 			{
@@ -275,6 +294,27 @@ namespace Bapteme.Controllers
 		private DateTime add_week(DateTime intitial_date, int nbr_weeks)
 		{
 			return intitial_date.AddDays(7 * nbr_weeks);
+		}
+
+		private List<String> getListFromFile(string fileName)
+		{
+			List<string> list_string;
+			var pathToFile = _env.ContentRootPath
+					   + Path.DirectorySeparatorChar.ToString()
+					   + "referenceFiles"
+					   + Path.DirectorySeparatorChar.ToString()
+					   + fileName;
+
+			string fileContent;
+
+			using (StreamReader reader = new StreamReader(new FileStream(pathToFile, FileMode.Open)))
+			{
+				fileContent = reader.ReadToEnd();
+			}
+
+			list_string = JsonConvert.DeserializeObject<List<string>>(fileContent);
+
+			return list_string;
 		}
 	}
 }

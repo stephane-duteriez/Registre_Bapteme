@@ -487,7 +487,6 @@ namespace Bapteme.Controllers
 
 		private async Task createRolesandUsers()
 		{
-			// In Startup iam creating first Admin Role and creating a default Admin User     
 
 			bool x = await _roleManager.RoleExistsAsync("Admin");
 			if (!x)
