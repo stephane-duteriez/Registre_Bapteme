@@ -1,4 +1,5 @@
 ﻿@model List<Bapteme.Models.Celebration>
+
 <div class="panel panel-default">
 	<div class="panel-heading">
 		<h3 class="panel-title">Liste Celebrations</h3>
@@ -69,6 +70,7 @@
 	</div>
 </div>
 
+
 <div class="modal fade modal-addContacts" id="AddContacts" tabindex="-1" role="dialog" aria-labelledby="addContacts">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
@@ -89,16 +91,22 @@
 	</div>
 </div>
 
+<alert-modal asp-body="La celebration sera supprimé définitivement." asp-entity-name="une celebration" id="alert-modal" ></alert-modal>
+
 <script type="text/javascript">
 	function delete_Celebration(CelebrationId) {
-		$.ajax({
-			url: "@Url.Action("Delete", "ApiCelebration")",
-			type: "DELETE",
-			data: { CelebrationId: CelebrationId, __RequestVerificationToken: $("input[name='__RequestVerificationToken']").val() },
-			success: function () {
-				$("#ID" + CelebrationId).remove();
-			}
-		});
+
+		$('#alert-modal').modal('show');
+		$("#alert-modal").find("#btn-confirm").click(function () {
+			$.ajax({
+				url: "@Url.Action("Delete", "ApiCelebration")",
+				type: "DELETE",
+				data: { CelebrationId: CelebrationId, __RequestVerificationToken: $("input[name='__RequestVerificationToken']").val() },
+				success: function () {
+					$("#ID" + CelebrationId).remove();
+				}
+			});
+		})
 	}
 
 	function SetModalAddBapteme() {

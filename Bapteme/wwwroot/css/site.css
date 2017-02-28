@@ -61,3 +61,12 @@ textarea {
 .date {
     max-width:280px;
 }
+
+.panel:last-child, .panel-group {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+tr[data-href]:hover {
+    cursor: pointer;
+} 
