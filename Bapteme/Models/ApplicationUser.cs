@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 
 namespace Bapteme.Models
 {
@@ -30,5 +32,6 @@ namespace Bapteme.Models
 				return FirstName + " " + LastName;
 			}
 		}
+
 	}
 }

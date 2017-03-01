@@ -42,7 +42,7 @@ namespace Bapteme.ApiControllers
 			await _db.Celebrations.AddAsync(celebration.Celebration);
 			await _db.SaveChangesAsync();
 			Clocher clocher = await _db.Clochers.Where(x => x.Id == celebration.ClocherId).FirstAsync();
-			ViewBag.roles = await FindRole(await GetCurrentUserAsync(), clocher.ParoisseId);
+			ViewBag.roles = await FindRole(clocher.ParoisseId);
 			List<Celebration> l_celebration = new List<Celebration>();
 			if (celebration.single_clocher)
 			{

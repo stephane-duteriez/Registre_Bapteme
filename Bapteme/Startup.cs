@@ -18,6 +18,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using System.Globalization;
 using MySQL.Data.Entity.Extensions;
+using Microsoft.AspNetCore.Identity;
+using Bapteme.CustomFactory;
 
 namespace Bapteme
 {
@@ -53,6 +55,8 @@ namespace Bapteme
 			services.AddIdentity<ApplicationUser, IdentityRole>()
 				.AddEntityFrameworkStores<ApplicationDbContext>()
 				.AddDefaultTokenProviders();
+
+			services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, AppClaimsPrincipalFactory>();
 
 			services.AddDbContext<BaptemeDataContext>(options =>
 			{

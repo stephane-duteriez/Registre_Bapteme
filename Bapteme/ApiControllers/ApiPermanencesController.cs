@@ -114,7 +114,7 @@ namespace Bapteme.ApiControllers
                 }
             }
 			List<Permanence> l_permanence = await _db.Permences.Include(x=>x.Clocher).Where(x => x.ClocherId == permanence.ClocherId).ToListAsync();
-			ViewBag.roles = await FindRole(await GetCurrentUserAsync(), l_permanence[0].Clocher.ParoisseId);
+			ViewBag.roles = await FindRole(l_permanence[0].Clocher.ParoisseId);
 			return PartialView("_indexPermanence", l_permanence);
         }
 

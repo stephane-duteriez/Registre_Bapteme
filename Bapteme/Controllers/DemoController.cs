@@ -12,6 +12,7 @@ using System.IO;
 using System.Reflection;
 using Microsoft.AspNetCore.Hosting;
 using Newtonsoft.Json;
+using System.Security.Claims;
 
 namespace Bapteme.Controllers
 {

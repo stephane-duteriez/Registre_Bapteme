@@ -26,11 +26,16 @@ namespace Bapteme.Controllers
 			return await _userManager.GetUserAsync(HttpContext.User);
 		}
 
-		protected async Task<List<role>> FindRole(ApplicationUser user, Guid paroisseId)
+		protected async Task<List<role>> FindRole(Guid paroisseId)
 		{
-			if (user != null)
+			string userId = null;
+			if (HttpContext.User.FindFirst("UserId") != null)
 			{
-				return await _db.UserParoisse.Where(x => x.UserId == user.Id).Where(x => x.ParoisseId == paroisseId).Select(x=>x.Role).ToListAsync();
+				userId = HttpContext.User.FindFirst("UserId").Value;
+			}
+			if (userId != null)
+			{
+				return await _db.UserParoisse.Where(x => x.UserId == userId).Where(x => x.ParoisseId == paroisseId).Select(x=>x.Role).ToListAsync();
 			} else
 			{
 				return new List<role>() { role.Viewer };

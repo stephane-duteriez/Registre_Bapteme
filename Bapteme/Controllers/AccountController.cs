@@ -85,6 +85,7 @@ namespace Bapteme.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
+
                     _logger.LogInformation(1, "User logged in.");
                     return RedirectToLocal(returnUrl);
                 }
@@ -521,7 +522,6 @@ namespace Bapteme.Controllers
 				var role = new IdentityRole();
 				role.Name = "Manager";
 				await _roleManager.CreateAsync(role);
-
 			}
 
 			// creating Creating Employee role     

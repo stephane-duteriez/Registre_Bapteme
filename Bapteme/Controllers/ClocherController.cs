@@ -54,7 +54,7 @@ namespace Bapteme.Controllers
 		public IActionResult Post(string keyParoisse, string keyClocher)
 		{
 			Clocher clocher = _db.Clochers.Include(c => c.Paroisse).Include(c=>c.Celebrations).Include(c=>c.Permanences).FirstOrDefault(x => x.Key == keyClocher && x.Paroisse.Key==keyParoisse);
-			ViewBag.roles = FindRole(GetCurrentUserAsync().Result, clocher.ParoisseId).Result;
+			ViewBag.roles = FindRole(clocher.ParoisseId).Result;
 			return View(clocher);
 		}
 
@@ -64,7 +64,7 @@ namespace Bapteme.Controllers
 		public async Task<IActionResult> Edit(string keyParoisse, string keyClocher)
 		{
 			Clocher clocher = _db.Clochers.Include(c => c.Paroisse).Include(c=>c.Permanences).FirstOrDefault(x => x.Key == keyClocher && x.Paroisse.Key == keyParoisse);
-			List<role> myRoles = await FindRole(await GetCurrentUserAsync(), clocher.ParoisseId);
+			List<role> myRoles = await FindRole(clocher.ParoisseId);
 
 			if (myRoles.Contains(role.Administrateur))
 			{

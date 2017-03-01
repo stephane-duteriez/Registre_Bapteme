@@ -63,9 +63,8 @@ namespace Bapteme.Controllers
         [Route("{key}")]
         public async Task<IActionResult> Post(string key)
         {
-			ApplicationUser user = await GetCurrentUserAsync();
             var paroisse = _db.Paroisses.Include("Clochers").FirstOrDefault(x=>x.Key==key);
-			ViewBag.roles = await FindRole(user, paroisse.Id);
+			ViewBag.roles = await FindRole(paroisse.Id);
 			ViewBag.Celebrations = await _db.Celebrations.Where(x => x.Clocher.ParoisseId == paroisse.Id).Where(x=>x.Date >= DateTime.Now.AddDays(-7)).OrderBy(x=>x.Date).ToListAsync();
 			return View(paroisse);
         }
