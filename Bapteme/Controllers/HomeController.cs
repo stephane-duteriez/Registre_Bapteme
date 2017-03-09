@@ -48,7 +48,7 @@ namespace Bapteme.Controllers
             return View();
         }
 
-        public IActionResult Contact()
+		public IActionResult Contact()
         {
             return View();
         }

@@ -302,7 +302,7 @@ namespace Bapteme.Controllers
 			List<string> list_string;
 			var pathToFile = _env.ContentRootPath
 					   + Path.DirectorySeparatorChar.ToString()
-					   + "referenceFiles"
+					   + "ReferenceFiles"
 					   + Path.DirectorySeparatorChar.ToString()
 					   + fileName;
 
