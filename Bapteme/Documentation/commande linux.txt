@@ -1,0 +1,12 @@
+﻿start kestrel:
+systemctl start kestrel-bapteme.service
+stop kestrel:
+systemctl stop kestrel-bapteme.service
+get status kestrel:
+systemctl start kestrel-bapteme.service
+
+affiche kestrel conf file:
+sudo nano /etc/systemd/system/kestrel-bapteme.service
+
+donner les droits d'accès à un repertoire.
+sudo chown -R www-data -R ReferenceFiles
